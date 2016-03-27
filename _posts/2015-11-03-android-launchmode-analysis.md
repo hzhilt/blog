@@ -22,7 +22,20 @@ Activity的启动方式默认是standard，那我们用默认方式就好了，�
 我们可以通过这种方式查看activity的task 情况：
 **adb shell dumpsys activity activities **
 
-如果理解了task的概念那么
+如果理解了task的概念那么，我们可以看到下面的一些数据
+
+```
+  Stack #1:
+    Task id #651
+      TaskRecord{84fcbc3 #651 A=com.android.calendar U=0 sz=1}
+      Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=com.android.calendar/com.meizu.flyme.calendar.AllInOneActivity }
+        Hist #0: ActivityRecord{15ea815 u0 com.android.calendar/com.meizu.flyme.calendar.AllInOneActivity t651}
+          Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=com.android.calendar/com.meizu.flyme.calendar.AllInOneActivity bnds=[540,960][786,1248] }
+          ProcessRecord{f03c84 23404:com.android.calendar/u0a42}
+
+```
+
+
 
 #### singleTop
 
@@ -30,7 +43,7 @@ Activity的启动方式默认是standard，那我们用默认方式就好了，�
 
 #### singleInstance
 
-一个task有且自由一个该Activity。
+一个task有且只有一个该Activity，而且还是整个系统的有的Activity。
 
 #### singleTask
 
@@ -49,6 +62,10 @@ Activity的启动方式默认是standard，那我们用默认方式就好了，�
 3.在实际使用中，由于可能有很多场景，下面是一些可能的建议
 如果是对外开放的activity可以使用singleInstance
 如果是页面查看，避免重复oncreate可以使用singleTop，或者singleTask
+
+#### task:affinity
+
+我们在测试中，会遇到一种情况是我明明设置launchmode为 singleTask，为啥还是和原来启动的activity同一个task呢？google的文档不靠谱啊！原来这只是条件之一，manifest中还有一个参数task:affinity，如果没有这个参数，默认都是包名，所以，如果没设置这个参数就的话singleTask不生效。
 
 
 ### 参考
